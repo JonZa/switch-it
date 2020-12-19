@@ -1,7 +1,7 @@
 import axios from 'axios';
 let dynamicRoutes = () => {
 	const routes = axios.get('https://my.api.mockaroo.com/fed-exercise-data.json?key=cf334d90').then(res => {
-		return res.data.map(post => `/blog/${post.slug}`);
+		return res.data.map(post => `/blog/${post.ArticleTitle.toLowerCase().split(' ').join('-')}`);
 	});
 	console.log(routes);
 	return routes;

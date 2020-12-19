@@ -2,7 +2,7 @@
 	<main class="post individual">
 		<h1>{{ post.title }}</h1>
 		<small class="date">{{ post.date | dateformat }}</small>
-		<section v-html="post.content"></section>
+		<section v-html="post.excerpt"></section>
 	</main>
 </template>
 
