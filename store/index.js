@@ -1,66 +1,47 @@
-const siteURL = "https://css-tricks.com"
+const siteURL = 'https://my.api.mockaroo.com';
 
 export const state = () => ({
-  posts: [],
-  tags: []
-})
+	posts: [],
+	tags: []
+});
 
 export const mutations = {
-  updatePosts: (state, posts) => {
-    state.posts = posts
-  },
-  updateTags: (state, tags) => {
-    state.tags = tags
-  }
-}
+	updatePosts: (state, posts) => {
+		state.posts = posts;
+	},
+	updateTags: (state, tags) => {
+		state.tags = tags;
+	}
+};
 
 export const actions = {
-  async getPosts({ state, commit, dispatch }) {
-    if (state.posts.length) return
+	async getPosts({ state, commit, dispatch }) {
+		if (state.posts.length) return;
 
-    try {
-      let posts = await fetch(
-        `${siteURL}/wp-json/wp/v2/posts?page=1&per_page=20&_embed=1`
-      ).then(res => res.json())
+		try {
+			let posts = await fetch(`${siteURL}/fed-exercise-data.json?key=cf334d90`).then(res => res.json());
+			let tags = [...new Set([].concat.apply([], posts.map(({ Tags }) => Tags)))];
 
-      posts = posts
-        .filter(el => el.status === "publish")
-        .map(({ id, slug, title, excerpt, date, tags, content }) => ({
-          id,
-          slug,
-          title,
-          excerpt,
-          date,
-          tags,
-          content
-        }))
+			posts = posts.map(({ id, ArticleTitle, ShortDescription, Date, Tags }) => ({
+				id,
+				slug: ArticleTitle.toLowerCase().split(' ').join('-'),
+				title: ArticleTitle,
+				excerpt: ShortDescription,
+				date: Date,
+				tags: Tags.map(tag => (
+					tag.toLowerCase().split(' ').join('-')
+				))
+			}));
 
-      commit("updatePosts", posts)
-    } catch (err) {
-      console.log(err)
-    }
-  },
-  async getTags({ state, commit }) {
-    if (state.tags.length) return
+			tags = tags.map(tag => ({
+				id: tag.toLowerCase().split(' ').join('-'),
+				name: tag
+			}));
 
-    let allTags = state.posts.reduce((acc, item) => {
-      return acc.concat(item.tags)
-    }, [])
-    allTags = allTags.join()
-
-    try {
-      let tags = await fetch(
-        `${siteURL}/wp-json/wp/v2/tags?page=1&per_page=40&include=${allTags}`
-      ).then(res => res.json())
-
-      tags = tags.map(({ id, name }) => ({
-        id,
-        name
-      }))
-
-      commit("updateTags", tags)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-}
+			commit('updatePosts', posts);
+			commit('updateTags', tags);
+		} catch (err) {
+			console.log(err);
+		}
+	}
+};
