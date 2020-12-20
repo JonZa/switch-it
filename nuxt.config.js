@@ -1,11 +1,14 @@
-import fs from 'fs'
 import axios from 'axios';
 
 let dynamicRoutes = () => {
 	console.log('DYNAMIC ROUTES DYNAMIC ROUTES DYNAMIC ROUTES');
-	const routes = axios.get('https://my.api.mockaroo.com/fed-exercise-data.json?key=cf334d90').then(res => {
-		console.log(res)
-		return res.data.map(post => `/blog/${post.ArticleTitle.toLowerCase().split(' ').join('-')}`);
+	const routes = axios.get('https://jsonkeeper.com/b/WKYH').then(res => {
+		return res.data.map(
+			post =>
+				`/news/${post.ArticleTitle.toLowerCase()
+					.split(' ')
+					.join('-')}`
+		);
 	});
 	console.log(routes);
 	return routes;

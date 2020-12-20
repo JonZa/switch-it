@@ -1,4 +1,4 @@
-const siteURL = 'https://my.api.mockaroo.com';
+const siteURL = 'https://jsonkeeper.com';
 
 export const state = () => ({
 	posts: [],
@@ -19,7 +19,7 @@ export const actions = {
 		if (state.posts.length) return;
 
 		try {
-			let posts = await fetch(`${siteURL}/fed-exercise-data.json?key=cf334d90`).then(res => res.json());
+			let posts = await fetch(`${siteURL}/b/WKYH`).then(res => res.json());
 			let tags = [...new Set([].concat.apply([], posts.map(({ Tags }) => Tags)))];
 
 			posts = posts.map(({ id, ArticleTitle, ShortDescription, Date, Tags }) => ({
