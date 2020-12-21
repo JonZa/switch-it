@@ -4,7 +4,7 @@ let dynamicRoutes = () => {
 	const routes = axios.get('https://jsonkeeper.com/b/WKYH').then(res => {
 		return res.data.map(
 			post =>
-				`/news/${post.ArticleTitle.toLowerCase()
+				`/news/${post.ArticleTitle.replace(/[^a-zA-Z]+/g, '')
 					.split(' ')
 					.join('-')}`
 		);
@@ -28,9 +28,7 @@ export default {
 				content: process.env.npm_package_description || ''
 			}
 		],
-		link: [
-			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-		]
+		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
 	},
 	/*
 	 ** Customize the progress-bar color
@@ -39,7 +37,7 @@ export default {
 	/*
 	 ** Global CSS
 	 */
-	css: ['~/assets/variables.scss','~/assets/include-media.scss'],
+	css: ['~/assets/variables.scss', '~/assets/include-media.scss'],
 	/*
 	 ** Plugins to load before mounting the App
 	 */

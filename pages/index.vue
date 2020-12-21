@@ -101,7 +101,8 @@ $title: '.articles__article-title';
 		padding: 0;
 		margin-bottom: 50px;
 		position: relative;
-		@include media('>=desktop') {
+		@include media('>=tablet') {
+			justify-content: space-between;
 			&::before {
 				display: block;
 				content: '';
@@ -127,11 +128,14 @@ $title: '.articles__article-title';
 		display: block;
 		border-bottom: 1px solid transparent;
 		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-		@include media('>=desktop') {
+		@include media('>=tablet') {
 			margin-bottom: 0;
-			margin-right: #{'min(0.75vw, 1rem)'};
+			margin-right: 0;
 			padding-bottom: 0.75rem;
 			position: relative;
+		}
+		@include media('>=desktop') {
+			font-size: 1rem;
 		}
 		&:hover,
 		&--active {
@@ -150,15 +154,12 @@ $title: '.articles__article-title';
 				left: -0.5rem;
 				top: -1px;
 			}
-			@include media('>=desktop') {
-				margin-left: auto;
-			}
 		}
 	}
 }
 .articles {
 	color: #444;
-	@include media('>=desktop') {
+	@include media('>=tablet') {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		grid-auto-flow: dense;
@@ -171,7 +172,7 @@ $title: '.articles__article-title';
 		position: relative;
 		background-size: 0;
 		text-decoration: none;
-		@include media('<desktop') {
+		@include media('<tablet') {
 			padding-top: #{'min(55vw, 50vh)'};
 			margin-bottom: 1.875rem;
 		}
@@ -181,7 +182,7 @@ $title: '.articles__article-title';
 			content: '';
 			position: absolute;
 			top: 0;
-			@include media('<desktop') {
+			@include media('<tablet') {
 				height: #{'min(55vw, 50vh)'};
 				width: 100%;
 			}
@@ -197,19 +198,19 @@ $title: '.articles__article-title';
 			background-position: center center;
 			background-size: cover;
 			transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-			@include media('>=desktop') {
+			@include media('>=tablet') {
 				background-size: 110% auto;
 			}
 		}
 
 		&:hover::after {
-			@include media('>=desktop') {
+			@include media('>=tablet') {
 				background-size: 120% auto;
 				filter: brightness(1.2);
 			}
 		}
 
-		@include media('>=desktop') {
+		@include media('>=tablet') {
 			&:nth-of-type(4n + 1) {
 				grid-column: span 2;
 				height: calc(17.5vw * 2 + 1em);
@@ -268,7 +269,7 @@ $title: '.articles__article-title';
 			flex-direction: column;
 			transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 			padding: 15px 15px 20px 15px;
-			@include media('>=desktop') {
+			@include media('>=tablet') {
 				padding: #{'min(31vw / 12, 1200px * 0.31 / 12)'};
 			}
 		}
@@ -285,19 +286,19 @@ $title: '.articles__article-title';
 		}
 		&-subject {
 			padding-bottom: 25px;
-			@include media('>=desktop') {
+			@include media('>=tablet') {
 				padding-bottom: #{'min(31vw / 11, 1200px * 0.31 / 11)'};
 			}
 		}
 		&-title {
 			font-size: #{'min(100vw / 37.5, 2rem)'};
-			@include media('<desktop') {
+			@include media('<tablet') {
 				font-size: 1.125rem;
 				padding-bottom: 60px;
 			}
 		}
 		&-meta {
-			@include media('>=desktop') {
+			@include media('>=tablet') {
 				margin-top: auto;
 			}
 		}

@@ -24,7 +24,7 @@ export const actions = {
 
 			posts = posts.map(({ id, ArticleTitle, Subject, Author, ShortDescription, ThumbnailImage, Date, Tags }) => ({
 				id,
-				slug: ArticleTitle.toLowerCase().split(' ').join('-'),
+				slug: ArticleTitle.replace(/[^a-zA-Z]+/g, '').split(' ').join('-'),
 				subject: Subject,
 				title: ArticleTitle,
 				author: Author,

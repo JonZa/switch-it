@@ -18,13 +18,19 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
 	font-size: 16px;
 	padding: 50px 0;
-	@include media('>=desktop') {
+	@include media('>=tablet') {
 		padding: 150px 0;
 	}
 }
 button {
 	font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
 	font-size: 1rem;
+}
+hr {
+	border: 0;
+	height: 2px;
+	background: #ccc;
+	margin-bottom: 30px;
 }
 .container {
 	margin: 0 auto;
