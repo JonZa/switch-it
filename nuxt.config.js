@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 let dynamicRoutes = () => {
-	console.log('DYNAMIC ROUTES DYNAMIC ROUTES DYNAMIC ROUTES');
 	const routes = axios.get('https://jsonkeeper.com/b/WKYH').then(res => {
 		return res.data.map(
 			post =>
@@ -10,7 +9,6 @@ let dynamicRoutes = () => {
 					.join('-')}`
 		);
 	});
-	console.log(routes);
 	return routes;
 };
 
@@ -31,11 +29,7 @@ export default {
 			}
 		],
 		link: [
-			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-			{
-				rel: 'stylesheet',
-				href: 'https://fonts.googleapis.com/css?family=Alata|Open+Sans&display=swap'
-			}
+			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
 		]
 	},
 	/*
@@ -45,11 +39,11 @@ export default {
 	/*
 	 ** Global CSS
 	 */
-	css: ['~/assets/mixins.scss'],
+	css: ['~/assets/variables.scss','~/assets/include-media.scss'],
 	/*
 	 ** Plugins to load before mounting the App
 	 */
-	plugins: ['~/plugins/posts.server.js', '~/plugins/dateformat.js'],
+	plugins: ['~/plugins/posts.server.js'],
 	generate: {
 		routes: dynamicRoutes
 	},

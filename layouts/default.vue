@@ -1,93 +1,34 @@
 <template>
-  <div>
-    <app-nav />
-    <nuxt />
-  </div>
+	<div class="container">
+		<nuxt />
+	</div>
 </template>
 
-<script>
-import AppNav from "~/components/AppNav.vue";
-
-export default {
-  components: {
-    AppNav
-  }
-};
-</script>
-
-<style>
-html {
-  font-family: "Open Sans", sans-serif;
-  font-size: 18px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #fff;
-}
-
-h1,
-h2,
-h3 {
-  font-family: "Alata", serif;
-  font-weight: normal;
-}
-
+<style lang="scss">
+@import '@/assets/variables.scss';
+@import '@/assets/include-media.scss';
 *,
 *:before,
 *:after {
-  box-sizing: border-box;
-  margin: 0;
+	box-sizing: border-box;
+	margin: 0;
 }
-
-.individual h3 {
-  margin: 2em 0 25px;
+body {
+	background: #58585b;
+	font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+	font-size: 16px;
+	padding: 50px 0;
+	@include media('>=desktop') {
+		padding: 150px 0;
+	}
 }
-
-h1 {
-  margin-bottom: 30px;
-  text-align: center;
+button {
+	font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+	font-size: 1rem;
 }
-
-img {
-  width: 100%;
-}
-
-video {
-  width: 100%;
-  margin: 25px 0;
-}
-
-small {
-  color: #9d5615;
-}
-
-pre,
-code {
-  white-space: pre-wrap; /* css-3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
-  background: #eee;
-  border-radius: 4px;
-}
-
-pre {
-  padding: 8px 10px;
-}
-
-code {
-  padding: 2px 0;
-  line-height: 1.5;
-}
-
-p {
-  margin: 15px 0 20px;
+.container {
+	margin: 0 auto;
+	max-width: 1200px;
+	width: calc(100% - 3.375rem);
 }
 </style>

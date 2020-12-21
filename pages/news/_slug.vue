@@ -1,7 +1,7 @@
 <template>
 	<main class="post individual">
 		<h1>{{ post.title }}</h1>
-		<small class="date">{{ post.date | dateformat }}</small>
+		<small class="date">{{ post.date }}</small>
 		<section v-html="post.excerpt"></section>
 	</main>
 </template>

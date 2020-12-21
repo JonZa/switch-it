@@ -1,210 +1,306 @@
 <template>
-  <div>
-    <app-masthead></app-masthead>
-    <div class="posts">
-      <main>
-        <div class="post" v-for="post in sortedPosts" :key="post.id">
-          <h3>
-            <a :href="`news/${post.slug}`">{{ post.title }}</a>
-          </h3>
-          <small>{{ post.date | dateformat }}</small>
-          <div v-html="post.excerpt"></div>
-          <a :href="`news/${post.slug}`" class="readmore slide">Read more ⟶</a>
-        </div>
-      </main>
-      <aside>
-        <h2 class="tags-title">Tags</h2>
-        <div class="tags-list">
-          <ul>
-            <li
-              @click="updateTag(tag)"
-              v-for="tag in tags"
-              :key="tag.id"
-              :class="[tag.id === selectedTag ? activeClass : '']"
-            >
-              <a>{{ tag.name }}</a>
-              <span v-if="tag.id === selectedTag">✕</span>
-            </li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-  </div>
+	<div>
+		<div class="filters">
+			<strong class="filters__headline">
+				Filter
+			</strong>
+			<div class="filters__list">
+				<button type="button" @click="resetTags()" class="filters__tag" :class="[!selectedTags.length ? activeTag : '']">
+					All categories
+				</button>
+				<button type="button" @click="updateTags(tag)" v-for="tag in tags" :key="tag.id" class="filters__tag" :class="selectedTags.includes(tag.id) ? activeTag : ''">
+					{{ tag.name }}
+				</button>
+				<button type="button" @click="resetTags()" class="filters__tag" :class="[!selectedTags.length ? activeTag : '']">
+					Reset
+				</button>
+			</div>
+		</div>
+		<div class="tags-list"></div>
+		<div class="articles">
+			<a :href="`news/${post.slug}`" class="articles__article lozad" v-for="post in sortedPosts" :key="post.id" :data-background-image="post.thumbnail">
+				<div class="articles__article-details">
+					<small class="articles__article-subject">{{ post.subject }}</small>
+					<h2 class="articles__article-title">{{ post.title }}</h2>
+					<small class="articles__article-meta">
+						<time :date-time="post.date">{{ post.date }}</time
+						><br />
+						{{ post.author.charAt(0) + ' ' + post.author.split(' ')[post.author.split(' ').length - 1] }}</small
+					>
+				</div>
+			</a>
+		</div>
+	</div>
 </template>
 
 <script>
-import AppMasthead from "@/components/AppMasthead.vue";
-
+import lozad from 'lozad';
 export default {
-  components: {
-    AppMasthead
-  },
-  data() {
-    return {
-      selectedTag: null,
-      activeClass: "active"
-    };
-  },
-  computed: {
-    posts() {
-      return this.$store.state.posts;
-    },
-    tags() {
-      return this.$store.state.tags;
-    },
-    sortedPosts() {
-      if (!this.selectedTag) return this.posts;
-      return this.posts.filter(el => el.tags.includes(this.selectedTag));
-    }
-  },
-  created() {
-    this.$store.dispatch("getPosts");
-  },
-  methods: {
-    updateTag(tag) {
-      if (!this.selectedTag) {
-        this.selectedTag = tag.id;
-      } else {
-        this.selectedTag = null;
-      }
-    }
-  }
+	data() {
+		return {
+			selectedTags: [],
+			observer: null,
+			activeTag: 'filters__tag--active'
+		};
+	},
+	computed: {
+		posts() {
+			return this.$store.state.posts;
+		},
+		tags() {
+			return this.$store.state.tags;
+		},
+		sortedPosts() {
+			if (!this.selectedTags.length) return this.posts;
+			return this.posts.filter(post => this.selectedTags.some(tag => post.tags.includes(tag)));
+		}
+	},
+	created() {
+		this.$store.dispatch('getPosts');
+	},
+	methods: {
+		resetTags() {
+			this.selectedTags = [];
+			this.$nextTick(function() {
+				this.observer.observe();
+			});
+		},
+		updateTags(tag) {
+			if (!this.selectedTags.includes(tag.id)) {
+				this.selectedTags.push(tag.id);
+			} else {
+				this.selectedTags.splice(this.selectedTags.indexOf(tag.id), 1);
+			}
+			this.$nextTick(function() {
+				this.observer.observe();
+			});
+		}
+	},
+	mounted() {
+		this.observer = lozad();
+		this.observer.observe();
+	}
 };
 </script>
 
 <style lang="scss">
-.posts {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 6vw;
-  margin: 5em auto;
-  max-width: 80vw;
+@import '@/assets/variables.scss';
+@import '@/assets/include-media.scss';
+$details: '.articles__article-details';
+$title: '.articles__article-title';
+.filters {
+	font-size: 0.875rem;
+	&__headline {
+		display: block;
+		color: #fff;
+		margin-bottom: 20px;
+	}
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0;
+		margin-bottom: 50px;
+		position: relative;
+		@include media('>=desktop') {
+			&::before {
+				display: block;
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background: #666;
+			}
+		}
+	}
+	&__tag {
+		font-size: 0.875rem;
+		cursor: pointer;
+		outline: 0;
+		background: transparent;
+		border: 0;
+		color: #aaa;
+		margin-right: 1rem;
+		padding: 0 0 0.125rem 0;
+		margin-bottom: 0.5rem;
+		display: block;
+		border-bottom: 1px solid transparent;
+		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+		@include media('>=desktop') {
+			margin-bottom: 0;
+			margin-right: #{'min(0.75vw, 1rem)'};
+			padding-bottom: 0.75rem;
+			position: relative;
+		}
+		&:hover,
+		&--active {
+			border-color: #aaa;
+			color: #fff;
+		}
+		&:last-child {
+			border-bottom: 0;
+			color: #fff;
+			margin-left: 0.5rem;
+			margin-right: 0;
+			&::before {
+				color: #aaa;
+				content: '|';
+				position: relative;
+				left: -0.5rem;
+				top: -1px;
+			}
+			@include media('>=desktop') {
+				margin-left: auto;
+			}
+		}
+	}
 }
+.articles {
+	color: #444;
+	@include media('>=desktop') {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-auto-flow: dense;
+		grid-gap: 1.875rem;
+	}
+	&__article {
+		background-color: #fff;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		background-size: 0;
+		text-decoration: none;
+		@include media('<desktop') {
+			padding-top: #{'min(55vw, 50vh)'};
+			margin-bottom: 1.875rem;
+		}
+		&::before,
+		&::after {
+			display: block;
+			content: '';
+			position: absolute;
+			top: 0;
+			@include media('<desktop') {
+				height: #{'min(55vw, 50vh)'};
+				width: 100%;
+			}
+		}
+		&::before {
+			background-attachment: fixed;
+			background-color: #247;
+			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) 10px, rgba(255, 255, 255, 0.9) 10px, rgba(255, 255, 255, 0.9) 20px), repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7) 10px, rgba(255, 255, 255, 0.8) 10px, rgba(255, 255, 255, 0.8) 20px);
+		}
+		&::after {
+			background-image: inherit;
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: cover;
+			transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+			@include media('>=desktop') {
+				background-size: 110% auto;
+			}
+		}
 
-main {
-  grid-area: 1 / 1 / 2 / 2;
-}
+		&:hover::after {
+			@include media('>=desktop') {
+				background-size: 120% auto;
+				filter: brightness(1.2);
+			}
+		}
 
-aside {
-  grid-area: 1 / 2 / 2 / 3;
-}
+		@include media('>=desktop') {
+			&:nth-of-type(4n + 1) {
+				grid-column: span 2;
+				height: calc(17.5vw * 2 + 1em);
+				#{$details} {
+					width: #{'min(31vw, 1200px * 0.31)'};
+					height: 100%;
+					padding: #{'min(31vw / 6, 1200px * 0.31 / 6)'};
+				}
+				&::before,
+				&::after {
+					bottom: 0;
+					left: #{'min(31vw, 1200px * 0.31)'};
+					right: 0;
+				}
+			}
 
-h2 {
-  margin-bottom: 2em;
-}
+			&:nth-of-type(4n + 2),
+			&:nth-of-type(4n + 3) {
+				grid-column: 1;
+				justify-content: flex-end;
+				height: 17.5vw;
+				&::before,
+				&::after {
+					bottom: 0;
+					left: 0;
+					width: #{'min(31vw, 1200px * 0.31)'};
+				}
+				#{$details} {
+					margin-left: #{'min(31vw, 1200px * 0.31)'};
+					height: 100%;
+				}
+				#{$title} {
+					font-size: #{'max(50vw / 37.5, 0.875rem)'};
+				}
+			}
 
-a,
-a:active,
-a:visited {
-  text-decoration: none;
-  color: black;
-}
+			&:nth-child(4n) {
+				grid-row: span 2;
+				&::before,
+				&::after {
+					height: 17.5vw;
+					left: 0;
+					right: 0;
+				}
+				#{$details} {
+					margin-top: 17.5vw;
+					height: 100%;
+				}
+			}
+		}
 
-a.readmore {
-  display: inline-block;
-  font-size: 11px;
-  text-transform: uppercase;
-  padding: 5px 15px;
-  letter-spacing: 2px;
-  position: relative;
-  color: #000;
-  font-weight: 700;
-  font-family: "Open Sans", serif;
-  border: 1px solid #ccc;
-  background: #fff;
-}
+		&-details {
+			background-color: #fff;
+			color: #555;
+			display: flex;
+			flex-direction: column;
+			transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+			padding: 15px 15px 20px 15px;
+			@include media('>=desktop') {
+				padding: #{'min(31vw / 12, 1200px * 0.31 / 12)'};
+			}
+		}
+		&:hover #{$details} {
+			background-color: #eee;
+			color: #333;
+		}
 
-.tags-title {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  text-transform: capitalize;
-  letter-spacing: 0;
-  font-size: 1.2rem;
-  padding: 15px;
-  margin: 0 35px;
-  position: relative;
-  top: -25px;
-}
-
-.tags-list {
-  background: #f5f5f5;
-  padding: 70px 25px 25px;
-  margin-top: -65px;
-}
-
-.post {
-  border-bottom: 1px solid rgb(223, 222, 222);
-  margin-bottom: 2em;
-  padding-bottom: 2em;
-  color: #444;
-
-  h3 {
-    margin-bottom: 0.5em;
-    font-size: 26px;
-  }
-}
-
-.tags-list ul {
-  padding-left: 0;
-}
-
-.tags-list li {
-  font-family: "Open Sans", serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 6px 15px;
-  margin: 0 0 10px 10px;
-  display: inline-block;
-  font-size: 0.7rem !important;
-  border: 1px solid #000;
-  transition: all 0.3s;
-  outline: none;
-  font-weight: normal;
-  cursor: pointer;
-  background: #fff;
-  a {
-    color: #000;
-  }
-}
-
-.active {
-  border: 1px solid #d44119;
-  background-color: #fae091 !important;
-}
-
-.slide {
-  position: relative;
-  background: transparent;
-  -webkit-transition: 0.3s ease;
-  transition: 0.3s ease;
-  z-index: 1;
-  backface-visibility: hidden;
-  perspective: 1000px;
-  transform: translateZ(0);
-  cursor: pointer;
-
-  &:hover {
-    color: #fff;
-  }
-
-  &:hover:before {
-    right: -1px;
-  }
-}
-
-.slide::before {
-  content: "";
-  display: block;
-  position: absolute;
-  background: #000;
-  transition: right 0.3s ease;
-  z-index: -1;
-  top: -2px;
-  bottom: -2px;
-  left: -2px;
-  right: 108%;
-  backface-visibility: hidden;
+		&-subject,
+		&-meta {
+			text-transform: uppercase;
+			font-size: 0.75rem;
+			color: #999;
+		}
+		&-subject {
+			padding-bottom: 25px;
+			@include media('>=desktop') {
+				padding-bottom: #{'min(31vw / 11, 1200px * 0.31 / 11)'};
+			}
+		}
+		&-title {
+			font-size: #{'min(100vw / 37.5, 2rem)'};
+			@include media('<desktop') {
+				font-size: 1.125rem;
+				padding-bottom: 60px;
+			}
+		}
+		&-meta {
+			@include media('>=desktop') {
+				margin-top: auto;
+			}
+		}
+	}
 }
 </style>
