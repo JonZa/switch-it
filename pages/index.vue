@@ -263,7 +263,7 @@ $title: '.articles__article-title';
 		}
 
 		&-details {
-			background-color: #fff;
+			background-color: #fafafa;
 			color: #555;
 			display: flex;
 			flex-direction: column;
