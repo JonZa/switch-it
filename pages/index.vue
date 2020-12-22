@@ -166,7 +166,7 @@ $title: '.articles__article-title';
 		grid-gap: 1.875rem;
 	}
 	&__article {
-		background-color: #fff;
+		background-color: #fafafa;
 		display: flex;
 		flex-direction: column;
 		position: relative;
