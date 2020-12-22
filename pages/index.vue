@@ -56,11 +56,13 @@ export default {
 		}
 	},
 	created() {
+		if (this.$route.query.filters !== undefined && this.$route.query.filters.split(',').length) this.selectedTags = this.$route.query.filters.split(',');
 		this.$store.dispatch('getPosts');
 	},
 	methods: {
 		resetTags() {
 			this.selectedTags = [];
+			this.$router.replace({ query: null });
 			this.$nextTick(function() {
 				this.observer.observe();
 			});
@@ -70,6 +72,11 @@ export default {
 				this.selectedTags.push(tag.id);
 			} else {
 				this.selectedTags.splice(this.selectedTags.indexOf(tag.id), 1);
+			}
+			if (this.selectedTags.length) {
+				this.$router.push({ query: { filters: this.selectedTags.join(',') } });
+			} else {
+				this.$router.replace({ query: null });
 			}
 			this.$nextTick(function() {
 				this.observer.observe();
