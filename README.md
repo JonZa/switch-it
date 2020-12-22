@@ -16,7 +16,3 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
-
-## Credits
-
-[Sarah Drasner & Geoff Graham](https://www.smashingmagazine.com/2020/02/headless-wordpress-site-jamstack/).
